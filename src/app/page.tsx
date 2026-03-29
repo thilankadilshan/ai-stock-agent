@@ -13,7 +13,7 @@ export default function Home() {
       {/* 1. Sidebar - Responsive Logic */}
       <aside
         className={`
-        fixed inset-y-0 left-0 z-50 w-18.75 border-r border-white/5 bg-[#0d0d0d] flex flex-col items-center py-8 gap-10 transition-transform duration-300 ease-in-out
+        fixed inset-y-0 left-0 z-50 w-[75px] border-r border-white/5 bg-[#0d0d0d] flex flex-col items-center py-8 gap-10 transition-transform duration-300 ease-in-out
         md:relative md:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
       `}
       >
@@ -38,8 +38,8 @@ export default function Home() {
       )}
 
       <div className="flex-1 flex flex-col relative min-w-0">
-        {/* Top Minimal Header */}
-        <header className="flex items-center justify-between p-4 md:p-6 sticky top-0 bg-[#0d0d0d]/80 backdrop-blur-md z-30">
+        {/* Top Minimal Header - NOW TRANSPARENT */}
+        <header className="flex items-center justify-between p-4 md:p-6 absolute top-0 left-0 right-0 bg-transparent backdrop-blur-[2px] z-30">
           <div className="flex items-center gap-3">
             {/* Menu Button for Mobile */}
             <button

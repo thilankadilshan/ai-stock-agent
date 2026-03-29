@@ -58,9 +58,9 @@ export default function ChatInterface() {
       <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-75 md:w-150 h-75 md:h-150 bg-teal-500/10 blur-[80px] md:blur-[120px] rounded-full pointer-events-none" />
 
       {/* Main Content Area */}
-      <div className="flex-1 w-full max-w-4xl overflow-y-auto p-4 md:p-10 scrollbar-hide pb-40">
+      {/* ADDED pt-20 md:pt-28 to keep messages below the transparent navbar */}
+      <div className="flex-1 w-full max-w-4xl overflow-y-auto p-4 md:p-10 pt-20 md:pt-28 scrollbar-hide pb-40">
         {messages.length === 0 ? (
-          /* Pushed everything UP with mt-4 md:mt-10 and items-start */
           <div className="flex flex-col justify-start pt-4 md:pt-10 animate-fade-in">
             <h1 className="text-3xl md:text-6xl font-medium text-white/90 tracking-tight leading-tight mb-8 md:mb-12">
               Hey! Analyst <br />
@@ -69,9 +69,7 @@ export default function ChatInterface() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               <div
-                onClick={() => {
-                  setInput("Analyze Financial Reports");
-                }}
+                onClick={() => setInput("Analyze Financial Reports")}
                 className="p-4 md:p-6 rounded-2xl glass hover:bg-white/5 transition-all cursor-pointer group"
               >
                 <span className="bg-sky-200/20 text-sky-200 px-3 py-1 rounded-md text-[10px] md:text-xs mb-3 inline-block font-medium">
@@ -82,9 +80,7 @@ export default function ChatInterface() {
                 </p>
               </div>
               <div
-                onClick={() => {
-                  setInput("Short-term Price Prediction");
-                }}
+                onClick={() => setInput("Short-term Price Prediction")}
                 className="p-4 md:p-6 rounded-2xl glass hover:bg-white/5 transition-all cursor-pointer group"
               >
                 <span className="bg-rose-200/20 text-rose-200 px-3 py-1 rounded-md text-[10px] md:text-xs mb-3 inline-block font-medium">
@@ -95,16 +91,16 @@ export default function ChatInterface() {
                 </p>
               </div>
               <div
-                onClick={() => {
-                  setInput("Latest Market Sentiment for Stock");
-                }}
+                onClick={() =>
+                  setInput("Latest Market Sentiment for Stock Market")
+                }
                 className="p-4 md:p-6 rounded-2xl glass hover:bg-white/5 transition-all cursor-pointer group"
               >
                 <span className="bg-emerald-200/20 text-emerald-200 px-3 py-1 rounded-md text-[10px] md:text-xs mb-3 inline-block font-medium">
                   News
                 </span>
                 <p className="text-white/50 text-xs md:text-sm group-hover:text-white/80 transition-colors">
-                  Latest Market Sentiment for Srock Market
+                  Latest Market Sentiment for Stock Market
                 </p>
               </div>
             </div>
