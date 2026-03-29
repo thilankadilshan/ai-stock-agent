@@ -1,19 +1,21 @@
+// src/components/ChatInterface.tsx
 "use client";
 
 import { useState, useRef, useEffect } from "react";
 import { Sparkles, Paperclip, ArrowUp, User, Bot } from "lucide-react";
-
-interface Message {
-  role: "user" | "ai";
-  content: string;
-}
+import { Message } from "@/src/types/chat";
+import { sendMessageToAI } from "@/src/lib/api";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -30,36 +32,38 @@ export default function ChatInterface() {
     }
   }, [input]);
 
-  const handleSend = (e?: React.FormEvent) => {
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isTyping]);
+
+  const handleSend = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!input.trim() || isTyping) return;
 
     const userMessage = input.trim();
+
     setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
     setInput("");
     setIsTyping(true);
 
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "ai",
-          content:
-            "The Quant AI Agent is currently under development. Deep analysis for the Sri Lankan Stock Market (CSE) will be live in the next phase. Thank you for testing the interface.",
-        },
-      ]);
-      setIsTyping(false);
-    }, 1000);
+    const aiResponse = await sendMessageToAI(userMessage);
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "ai",
+        content: aiResponse,
+      },
+    ]);
+
+    setIsTyping(false);
   };
 
   return (
     <div className="relative h-full w-full flex flex-col items-center bg-grid overflow-hidden">
-      {/* Soft Aurora Blob */}
       <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-75 md:w-150 h-75 md:h-150 bg-teal-500/10 blur-[80px] md:blur-[120px] rounded-full pointer-events-none" />
 
-      {/* Main Content Area */}
-      {/* ADDED pt-20 md:pt-28 to keep messages below the transparent navbar */}
-      <div className="flex-1 w-full max-w-4xl overflow-y-auto p-4 md:p-10 pt-20 md:pt-28 scrollbar-hide pb-40">
+      <div className="flex-1 w-full max-w-4xl overflow-y-auto p-4 md:p-10 pt-20 md:pt-28 scrollbar-hide">
         {messages.length === 0 ? (
           <div className="flex flex-col justify-start pt-4 md:pt-10 animate-fade-in">
             <h1 className="text-3xl md:text-6xl font-medium text-white/90 tracking-tight leading-tight mb-8 md:mb-12">
@@ -69,7 +73,10 @@ export default function ChatInterface() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               <div
-                onClick={() => setInput("Analyze Financial Reports")}
+                onClick={() => {
+                  setInput("Analyze Financial Reports");
+                  textareaRef.current?.focus();
+                }}
                 className="p-4 md:p-6 rounded-2xl glass hover:bg-white/5 transition-all cursor-pointer group"
               >
                 <span className="bg-sky-200/20 text-sky-200 px-3 py-1 rounded-md text-[10px] md:text-xs mb-3 inline-block font-medium">
@@ -80,7 +87,10 @@ export default function ChatInterface() {
                 </p>
               </div>
               <div
-                onClick={() => setInput("Short-term Price Prediction")}
+                onClick={() => {
+                  setInput("Short-term Price Prediction");
+                  textareaRef.current?.focus();
+                }}
                 className="p-4 md:p-6 rounded-2xl glass hover:bg-white/5 transition-all cursor-pointer group"
               >
                 <span className="bg-rose-200/20 text-rose-200 px-3 py-1 rounded-md text-[10px] md:text-xs mb-3 inline-block font-medium">
@@ -91,9 +101,10 @@ export default function ChatInterface() {
                 </p>
               </div>
               <div
-                onClick={() =>
-                  setInput("Latest Market Sentiment for Stock Market")
-                }
+                onClick={() => {
+                  setInput("Latest Market Sentiment for Stock Market");
+                  textareaRef.current?.focus();
+                }}
                 className="p-4 md:p-6 rounded-2xl glass hover:bg-white/5 transition-all cursor-pointer group"
               >
                 <span className="bg-emerald-200/20 text-emerald-200 px-3 py-1 rounded-md text-[10px] md:text-xs mb-3 inline-block font-medium">
@@ -121,9 +132,81 @@ export default function ChatInterface() {
                     {msg.role === "ai" ? <Bot size={16} /> : <User size={16} />}
                   </div>
                   <div
-                    className={`p-3 md:p-4 rounded-2xl text-sm md:text-base leading-relaxed ${msg.role === "ai" ? "bg-white/5 border border-white/10 text-white/80" : "bg-teal-600 text-white"}`}
+                    className={`p-3 md:p-4 rounded-2xl text-sm md:text-base leading-relaxed ${msg.role === "ai" ? "bg-white/5 border border-white/10 text-white/80" : "bg-teal-600 text-white whitespace-pre-wrap"}`}
                   >
-                    {msg.content}
+                    {msg.role === "ai" ? (
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          p: ({ node, ...props }) => (
+                            <p className="mb-4 last:mb-0" {...props} />
+                          ),
+                          strong: ({ node, ...props }) => (
+                            <strong
+                              className="font-semibold text-white"
+                              {...props}
+                            />
+                          ),
+                          ul: ({ node, ...props }) => (
+                            <ul
+                              className="list-disc ml-6 mb-4 space-y-1"
+                              {...props}
+                            />
+                          ),
+                          ol: ({ node, ...props }) => (
+                            <ol
+                              className="list-decimal ml-6 mb-4 space-y-1"
+                              {...props}
+                            />
+                          ),
+                          li: ({ node, ...props }) => (
+                            <li className="pl-1" {...props} />
+                          ),
+                          h1: ({ node, ...props }) => (
+                            <h1
+                              className="text-2xl font-bold text-white mb-4 mt-6"
+                              {...props}
+                            />
+                          ),
+                          h2: ({ node, ...props }) => (
+                            <h2
+                              className="text-xl font-bold text-white mb-3 mt-5"
+                              {...props}
+                            />
+                          ),
+                          h3: ({ node, ...props }) => (
+                            <h3
+                              className="text-lg font-bold text-white mb-2 mt-4"
+                              {...props}
+                            />
+                          ),
+                          table: ({ node, ...props }) => (
+                            <div className="overflow-x-auto mb-4">
+                              <table
+                                className="min-w-full border-collapse border border-white/20"
+                                {...props}
+                              />
+                            </div>
+                          ),
+                          th: ({ node, ...props }) => (
+                            <th
+                              className="border border-white/20 bg-white/10 px-4 py-2 text-left font-medium text-white"
+                              {...props}
+                            />
+                          ),
+                          td: ({ node, ...props }) => (
+                            <td
+                              className="border border-white/20 px-4 py-2"
+                              {...props}
+                            />
+                          ),
+                        }}
+                      >
+                        {msg.content}
+                      </ReactMarkdown>
+                    ) : (
+                      msg.content
+                    )}
                   </div>
                 </div>
               </div>
@@ -136,11 +219,13 @@ export default function ChatInterface() {
                 </div>
               </div>
             )}
+
+            <div className="h-32 md:h-48 w-full flex-shrink-0" />
+            <div ref={messagesEndRef} />
           </div>
         )}
       </div>
 
-      {/* Floating Input Bar */}
       <div className="z-40 w-full max-w-4xl fixed bottom-4 md:bottom-8 px-4">
         <form
           onSubmit={handleSend}
@@ -159,7 +244,7 @@ export default function ChatInterface() {
                 }
               }}
               placeholder="Ask me anything..."
-              className="w-full bg-transparent border-none focus:ring-0 text-base md:text-xl text-white/80 placeholder:text-white/20 resize-none min-h-10 max-h-45 overflow-hidden scrollbar-hide py-1.5"
+              className="w-full bg-transparent border-none focus:ring-0 text-base md:text-xl text-white/80 placeholder:text-white/20 resize-none min-h-10 max-h-45 overflow-hidden scrollbar-hide py-1.5 outline-none"
             />
           </div>
 
