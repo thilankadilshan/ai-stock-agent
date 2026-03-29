@@ -33,7 +33,7 @@ export default function Sidebar() {
           </span>
 
           {item.active && (
-            <div className="absolute -left-0 md:-left-4 h-6 w-1 bg-teal-500 rounded-full shadow-[0_0_10px_rgba(20,184,166,0.8)]" />
+            <div className="absolute left-0 md:-left-4 h-6 w-1 bg-teal-500 rounded-full shadow-[0_0_10px_rgba(20,184,166,0.8)]" />
           )}
         </div>
       ))}

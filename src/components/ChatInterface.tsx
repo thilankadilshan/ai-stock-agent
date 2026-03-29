@@ -55,7 +55,7 @@ export default function ChatInterface() {
   return (
     <div className="relative h-full w-full flex flex-col items-center bg-grid overflow-hidden">
       {/* Soft Aurora Blob */}
-      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-teal-500/10 blur-[80px] md:blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-75 md:w-150 h-75 md:h-150 bg-teal-500/10 blur-[80px] md:blur-[120px] rounded-full pointer-events-none" />
 
       {/* Main Content Area */}
       <div className="flex-1 w-full max-w-4xl overflow-y-auto p-4 md:p-10 scrollbar-hide pb-40">
@@ -120,7 +120,7 @@ export default function ChatInterface() {
                   className={`flex max-w-[90%] md:max-w-[85%] gap-2 md:gap-3 ${msg.role === "ai" ? "flex-row" : "flex-row-reverse"}`}
                 >
                   <div
-                    className={`h-7 w-7 md:h-8 md:w-8 rounded-full flex-shrink-0 flex items-center justify-center border ${msg.role === "ai" ? "bg-teal-500 border-teal-400 text-black" : "bg-white/10 border-white/10 text-white/60"}`}
+                    className={`h-7 w-7 md:h-8 md:w-8 rounded-full shrink-0 flex items-center justify-center border ${msg.role === "ai" ? "bg-teal-500 border-teal-400 text-black" : "bg-white/10 border-white/10 text-white/60"}`}
                   >
                     {msg.role === "ai" ? <Bot size={16} /> : <User size={16} />}
                   </div>
@@ -148,10 +148,10 @@ export default function ChatInterface() {
       <div className="z-40 w-full max-w-4xl fixed bottom-4 md:bottom-8 px-4">
         <form
           onSubmit={handleSend}
-          className="glass rounded-[24px] md:rounded-[32px] p-3 md:p-4 flex flex-col gap-2 shadow-2xl transition-all focus-within:border-teal-500/30"
+          className="glass rounded-3xl md:rounded-4xl p-3 md:p-4 flex flex-col gap-2 shadow-2xl transition-all focus-within:border-teal-500/30"
         >
           <div className="flex items-start gap-3 px-2">
-            <Sparkles className="text-white/40 mt-2 flex-shrink-0" size={18} />
+            <Sparkles className="text-white/40 mt-2 shrink-0" size={18} />
             <textarea
               ref={textareaRef}
               value={input}
@@ -163,7 +163,7 @@ export default function ChatInterface() {
                 }
               }}
               placeholder="Ask me anything..."
-              className="w-full bg-transparent border-none focus:ring-0 text-base md:text-xl text-white/80 placeholder:text-white/20 resize-none min-h-[40px] max-h-[180px] overflow-hidden scrollbar-hide py-1.5"
+              className="w-full bg-transparent border-none focus:ring-0 text-base md:text-xl text-white/80 placeholder:text-white/20 resize-none min-h-10 max-h-45 overflow-hidden scrollbar-hide py-1.5"
             />
           </div>
 

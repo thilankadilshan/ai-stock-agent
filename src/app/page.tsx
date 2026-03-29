@@ -13,11 +13,11 @@ export default function Home() {
       {/* 1. Sidebar - Responsive Logic */}
       <aside
         className={`
-        fixed inset-y-0 left-0 z-50 w-[75px] border-r border-white/5 bg-[#0d0d0d] flex flex-col items-center py-8 gap-10 transition-transform duration-300 ease-in-out
+        fixed inset-y-0 left-0 z-50 w-18.75 border-r border-white/5 bg-[#0d0d0d] flex flex-col items-center py-8 gap-10 transition-transform duration-300 ease-in-out
         md:relative md:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
       `}
       >
-        <div className="h-8 w-8 bg-teal-500 rounded-lg flex-shrink-0" />
+        <div className="h-8 w-8 bg-teal-500 rounded-lg shrink-0" />
         <Sidebar />
 
         {/* Close button for mobile */}
@@ -60,7 +60,7 @@ export default function Home() {
             <span className="text-xs md:text-sm font-light text-white/60">
               Analyst
             </span>
-            <div className="h-6 w-6 rounded-full bg-gradient-to-tr from-teal-400 to-blue-500" />
+            <div className="h-6 w-6 rounded-full bg-linear-to-tr from-teal-400 to-blue-500" />
           </div>
         </header>
 
