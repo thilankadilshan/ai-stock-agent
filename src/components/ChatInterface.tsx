@@ -42,11 +42,18 @@ export default function ChatInterface() {
 
     const userMessage = input.trim();
 
-    setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
+    // Create the new message array including the user's latest input
+    const updatedMessages: Message[] = [
+      ...messages,
+      { role: "user", content: userMessage },
+    ];
+
+    setMessages(updatedMessages);
     setInput("");
     setIsTyping(true);
 
-    const aiResponse = await sendMessageToAI(userMessage);
+    // PASSED THE WHOLE ARRAY HERE INSTEAD OF JUST THE STRING
+    const aiResponse = await sendMessageToAI(updatedMessages);
 
     setMessages((prev) => [
       ...prev,
@@ -220,7 +227,7 @@ export default function ChatInterface() {
               </div>
             )}
 
-            <div className="h-32 md:h-48 w-full flex-shrink-0" />
+            <div className="h-32 md:h-48 w-full shrink-0" />
             <div ref={messagesEndRef} />
           </div>
         )}

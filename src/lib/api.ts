@@ -1,13 +1,19 @@
-// src/lib/api.ts
+import { Message } from "@/src/types/chat";
 
-export async function sendMessageToAI(message: string): Promise<string> {
+export async function sendMessageToAI(messages: Message[]): Promise<string> {
   try {
+    // Format the messages to match what Groq/OpenAI expects (user and assistant)
+    const formattedMessages = messages.map((msg) => ({
+      role: msg.role === "ai" ? "assistant" : "user",
+      content: msg.content,
+    }));
+
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ messages: formattedMessages }),
     });
 
     if (!response.ok) {
